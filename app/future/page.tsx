@@ -3,7 +3,7 @@ import { ConceptSwitcher, Mark, ProofStrip, SiteFooter, SiteHeader } from "../sh
 
 export const metadata: Metadata = {
   title: "Future Protocol",
-  description: "A luminous, programmable-money homepage direction for TRON Payments.",
+  description: "A TRON-red, programmable-money homepage direction for TRON Payments.",
 };
 
 const capabilities = [
