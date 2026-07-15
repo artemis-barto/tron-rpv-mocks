@@ -4,7 +4,7 @@ import { ConceptSwitcher, Mark, SiteFooter } from "./shared";
 export const metadata: Metadata = {
   title: "Choose a design direction",
   description:
-    "Compare Proof of Scale, Global Movement, and Ecosystem Stories for TRON Payments.",
+    "Compare Proof of Scale, Global Movement, and Future Protocol for TRON Payments.",
 };
 
 const concepts = [
@@ -29,14 +29,14 @@ const concepts = [
     best: "Highest impact",
   },
   {
-    href: "/ecosystem",
+    href: "/future",
     number: "03",
-    title: "Ecosystem Stories",
-    tone: "Modular / human / content-led",
+    title: "Future Protocol",
+    tone: "Futuristic / luminous / programmable",
     description:
-      "A flexible publishing system built around partners, use cases, case studies, and a growing payments ecosystem.",
-    className: "card-ecosystem",
-    best: "Best content engine",
+      "A high-energy vision of programmable money built from luminous layers, precise signals, and next-generation payment use cases.",
+    className: "card-future",
+    best: "Most futuristic",
   },
 ];
 
@@ -61,7 +61,7 @@ export default function Home() {
           <p>
             Open each concept as a real responsive homepage. The core content and placeholder metrics stay consistent so the layout, mood, and storytelling approach are easy to compare.
           </p>
-          <span>Recommended starting point: Proof of Scale + Ecosystem Stories.</span>
+          <span>Recommended starting point: Proof of Scale + Future Protocol details.</span>
         </div>
       </section>
 
