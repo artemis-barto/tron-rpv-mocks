@@ -8,7 +8,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const protocol = requestHeaders.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
   const origin = `${protocol}://${host}`;
   const title = "TRON Payments - Design Concepts";
-  const description = "Three story-led design concepts for a TRON stablecoin payments website.";
+  const description = "Four story-led design concepts for a TRON stablecoin payments website.";
 
   return {
     title: { default: title, template: "%s | TRON Payments Concepts" },
@@ -17,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       type: "website",
-      images: [{ url: `${origin}/og.png`, width: 1200, height: 630, alt: "TRON Payments - three design directions" }],
+      images: [{ url: `${origin}/og.png`, width: 1200, height: 630, alt: "TRON Payments - four design directions" }],
     },
     twitter: {
       card: "summary_large_image",

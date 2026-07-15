@@ -1,4 +1,4 @@
-type Concept = "home" | "proof" | "movement" | "future";
+type Concept = "home" | "proof" | "movement" | "future" | "live";
 
 export function Mark() {
   return <span className="mark" aria-hidden="true"><i /></span>;
@@ -10,6 +10,7 @@ export function ConceptSwitcher({ active }: { active: Concept }) {
     { href: "/proof", label: "01 Proof", id: "proof" },
     { href: "/movement", label: "02 Movement", id: "movement" },
     { href: "/future", label: "03 Future", id: "future" },
+    { href: "/live", label: "04 Live", id: "live" },
   ];
   return (
     <aside className="concept-switcher" aria-label="Switch design concept">

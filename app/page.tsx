@@ -4,7 +4,7 @@ import { ConceptSwitcher, Mark, SiteFooter } from "./shared";
 export const metadata: Metadata = {
   title: "Choose a design direction",
   description:
-    "Compare Proof of Scale, Global Movement, and Future Protocol for TRON Payments.",
+    "Compare four story-led design directions for TRON Payments.",
 };
 
 const concepts = [
@@ -38,6 +38,16 @@ const concepts = [
     className: "card-future",
     best: "Most futuristic",
   },
+  {
+    href: "/live",
+    number: "04",
+    title: "Payments Live",
+    tone: "Editorial / technical / proof-first",
+    description:
+      "A dense institutional payments publication pairing a strong thesis with live-product moments, network proof, and modular solutions.",
+    className: "card-live",
+    best: "Closest reference",
+  },
 ];
 
 export default function Home() {
@@ -54,7 +64,7 @@ export default function Home() {
 
       <section className="chooser-intro shell">
         <div>
-          <p className="eyebrow">Three creative routes</p>
+          <p className="eyebrow">Four creative routes</p>
           <h1>Same story.<br />Different posture.</h1>
         </div>
         <div className="chooser-lede">
