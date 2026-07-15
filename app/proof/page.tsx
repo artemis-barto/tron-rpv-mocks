@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
 import { ConceptSwitcher, LogoCloud, MetricBars, ProofStrip, SiteFooter, SiteHeader } from "../shared";
+import { formatMonth, formatPercent, formatUSD, getTronPaymentsData } from "../data";
 
 export const metadata: Metadata = {
   title: "Proof of Scale",
   description: "An editorial, evidence-led homepage direction for TRON Payments.",
 };
 
-export default function ProofPage() {
+export default async function ProofPage() {
+  const data = await getTronPaymentsData();
   return (
     <main className="proof-page">
-      <ConceptSwitcher active="proof" />
+      <ConceptSwitcher active="proof" data={data} />
       <SiteHeader active="proof" />
 
       <section className="proof-hero shell" id="why">
@@ -23,14 +25,14 @@ export default function ProofPage() {
           </div>
         </div>
         <div className="proof-metric-card" id="proof">
-          <div><span>Live network proof</span><em>Illustrative</em></div>
-          <strong>$XXB</strong>
-          <p>monthly stablecoin activity</p>
-          <MetricBars light />
+          <div><span>Verified network proof</span><em>{formatMonth(data.asOf, true)}</em></div>
+          <strong>{formatUSD(data.latestB2B)}</strong>
+          <p>monthly B2B stablecoin volume</p>
+          <MetricBars light series={data.b2bSeries} label="Monthly B2B stablecoin volume for the latest twelve complete months" />
         </div>
       </section>
 
-      <section className="shell"><ProofStrip /></section>
+      <section className="shell"><ProofStrip data={data} /></section>
 
       <section className="proof-thesis shell" id="solutions">
         <div>
@@ -68,7 +70,7 @@ export default function ProofPage() {
           <p className="section-index">03 / CASE STUDY</p>
           <h2>From balance to checkout.</h2>
           <p>See how a payments partner can bring TRON stablecoins into everyday spending with a familiar customer experience.</p>
-          <div className="story-stat"><strong>XX%</strong><span>illustrative growth signal</span></div>
+          <div className="story-stat"><strong>{formatPercent(data.trackedPaymentsYoY)}</strong><span>tracked payment volume YoY</span></div>
           <a className="button button-red" href="#build">Read the story</a>
         </div>
       </section>
@@ -78,7 +80,7 @@ export default function ProofPage() {
         <h2>Make TRON part of your payments stack.</h2>
         <div><a className="button button-light" href="#why">Explore developer resources</a><span>Documentation and developer content are planned for the next phase.</span></div>
       </section>
-      <SiteFooter />
+      <SiteFooter data={data} />
     </main>
   );
 }

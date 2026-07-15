@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ConceptSwitcher, Mark, ProofStrip, SiteFooter, SiteHeader } from "../shared";
+import { formatMonth, formatUSD, getTronPaymentsData } from "../data";
 
 export const metadata: Metadata = {
   title: "Future Protocol",
@@ -13,10 +14,11 @@ const capabilities = [
   { number: "04", tag: "GLOBAL", title: "One rail across markets and time zones.", copy: "Move digital dollars around the clock through an open global network." },
 ];
 
-export default function FuturePage() {
+export default async function FuturePage() {
+  const data = await getTronPaymentsData();
   return (
     <main className="future-page">
-      <ConceptSwitcher active="future" />
+      <ConceptSwitcher active="future" data={data} />
       <div className="future-shell-top">
         <SiteHeader active="future" dark />
 
@@ -47,7 +49,7 @@ export default function FuturePage() {
         </section>
 
         <section className="future-telemetry shell" id="proof">
-          <div><span>NETWORK ACTIVITY</span><strong>$XXB</strong><em>MONTHLY / PLACEHOLDER</em></div>
+          <div><span>B2B PAYMENT VOLUME</span><strong>{formatUSD(data.latestB2B)}</strong><em>{formatMonth(data.asOf, true).toUpperCase()} / VERIFIED</em></div>
           <div><span>SETTLEMENT</span><strong>24 / 7</strong><em>ALWAYS AVAILABLE</em></div>
           <div><span>INTEGRATION MODE</span><strong>OPEN</strong><em>PROGRAMMABLE RAILS</em></div>
           <div className="telemetry-wave" aria-hidden="true">{Array.from({ length: 28 }, (_, index) => <i key={index} />)}</div>
@@ -98,14 +100,14 @@ export default function FuturePage() {
 
       <section className="future-proof shell">
         <div className="future-proof-copy"><p className="section-index">04 / PROVEN NETWORK</p><h2>Future-facing.<br />Grounded in proof.</h2><p>The page still earns trust with verified network evidence - it simply presents that evidence as part of a bigger vision.</p></div>
-        <div className="future-proof-panel"><span>LIVE SIGNAL / ILLUSTRATIVE</span><strong>$XXB</strong><p>monthly stablecoin activity</p><div className="future-proof-line"><i /><i /><i /><i /><i /><i /><i /></div></div>
-        <ProofStrip />
+        <div className="future-proof-panel"><span>SNOWFLAKE SIGNAL / VERIFIED</span><strong>{formatUSD(data.latestB2B)}</strong><p>monthly B2B stablecoin volume</p><div className="future-proof-line"><i /><i /><i /><i /><i /><i /><i /></div></div>
+        <ProofStrip data={data} />
       </section>
 
       <section className="future-build" id="build">
         <div className="shell"><div><span>BUILD // 2026+</span><h2>Program the next way money moves.</h2></div><a href="#why">ENTER DEVELOPER MODE <i>↗</i></a></div>
       </section>
-      <SiteFooter dark />
+      <SiteFooter dark data={data} />
     </main>
   );
 }

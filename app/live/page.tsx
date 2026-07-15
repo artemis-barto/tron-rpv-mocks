@@ -1,17 +1,11 @@
 import type { Metadata } from "next";
 import { ConceptSwitcher, Mark, SiteFooter, SiteHeader } from "../shared";
+import { barHeights, formatMonth, formatPercent, getTronPaymentsData } from "../data";
 
 export const metadata: Metadata = {
   title: "Payments Live",
   description: "A proof-first institutional payments homepage direction for TRON Payments.",
 };
-
-const proofPoints = [
-  ["$XXB", "MONTHLY STABLECOIN TRANSFERS"],
-  ["$XXM", "MONTHLY PAYMENT VOLUME"],
-  ["24 / 7", "GLOBAL SETTLEMENT"],
-  ["LOW", "MEDIAN NETWORK FEE"],
-];
 
 const solutions = [
   ["01", "Cross-border settlement", "Move stable value between markets without waiting for banking hours."],
@@ -20,10 +14,13 @@ const solutions = [
   ["04", "Embedded finance", "Put stablecoin settlement underneath a familiar product experience."],
 ];
 
-export default function LivePage() {
+export default async function LivePage() {
+  const data = await getTronPaymentsData();
+  const trackedWindow = data.trackedPaymentsSeries.slice(-12);
+  const trackedHeights = barHeights(trackedWindow);
   return (
     <main className="live-page">
-      <ConceptSwitcher active="live" />
+      <ConceptSwitcher active="live" data={data} />
       <div className="live-top">
         <SiteHeader active="live" dark />
 
@@ -50,7 +47,7 @@ export default function LivePage() {
         </section>
 
         <section className="live-proof-strip shell" id="proof">
-          {proofPoints.map(([value, label]) => <div key={label}><strong>{value}</strong><span>{label}</span></div>)}
+          {data.proofMetrics.map(({ value, label }) => <div key={label}><strong>{value}</strong><span>{label}</span></div>)}
         </section>
       </div>
 
@@ -78,10 +75,10 @@ export default function LivePage() {
             <p>Pair a decisive narrative with compact, legible evidence. Keep metrics in context and give every chart a reason to exist.</p>
           </div>
           <div className="live-chart-card">
-            <div className="chart-heading"><span>ILLUSTRATIVE NETWORK ACTIVITY</span><em>30 DAYS</em></div>
-            <div className="chart-bars" aria-hidden="true">{[26,31,38,34,46,54,50,66,63,78,74,92].map((height, index) => <i key={index} style={{ height: `${height}%` }} />)}</div>
-            <div className="chart-axis"><span>DAY 01</span><span>DAY 30</span></div>
-            <div className="chart-note"><i /><span>TRON PAYMENT ACTIVITY</span><b>UPWARD SIGNAL</b></div>
+            <div className="chart-heading"><span>VERIFIED TRON PAYMENT VOLUME</span><em>12 MONTHS</em></div>
+            <div className="chart-bars" role="img" aria-label="Tracked TRON payment volume for the latest twelve complete months">{trackedHeights.map((height, index) => <i key={trackedWindow[index].month} style={{ height: `${height}%` }} />)}</div>
+            <div className="chart-axis"><span>{formatMonth(trackedWindow.at(0)?.month ?? null, true).toUpperCase()}</span><span>{formatMonth(trackedWindow.at(-1)?.month ?? null, true).toUpperCase()}</span></div>
+            <div className="chart-note"><i /><span>TRACKED PAYMENT VOLUME</span><b>{formatPercent(data.trackedPaymentsYoY)} YOY</b></div>
           </div>
         </div>
       </section>
@@ -116,7 +113,7 @@ export default function LivePage() {
         <div className="shell"><p className="live-mono">READY TO MOVE VALUE?</p><h2>Bring the next payment experience to life.</h2><a href="#why">BUILD ON TRON <span>↗</span></a></div>
       </section>
 
-      <SiteFooter dark />
+      <SiteFooter dark data={data} />
     </main>
   );
 }

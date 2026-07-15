@@ -39,6 +39,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .concept-switcher nav a { display: flex; align-items: center; padding: 0 17px; border-inline: 1px solid transparent; }
 .concept-switcher nav a:hover, .concept-switcher nav a[aria-current="page"] { color: white; background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.08); }
 .concept-switcher em { margin-left: auto; font-style: normal; font-weight: 500; color: rgba(255,255,255,.36); }
+.data-status { display: inline-flex; align-items: center; gap: 7px; }
+.data-status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #767676; }
+.data-status-live { color: rgba(255,255,255,.68) !important; }
+.data-status-live::before { background: #59e391; box-shadow: 0 0 12px rgba(89,227,145,.6); }
 
 .site-header { position: relative; z-index: 10; height: 86px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; border-bottom: 1px solid var(--line); }
 .site-header nav { display: flex; gap: 34px; color: #4c4c4c; font-size: 12px; }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ConceptSwitcher, Mark, ProofStrip, SiteFooter, SiteHeader } from "../shared";
+import { getTronPaymentsData } from "../data";
 
 export const metadata: Metadata = {
   title: "Global Movement",
@@ -8,10 +9,11 @@ export const metadata: Metadata = {
 
 const nodes = Array.from({ length: 14 }, (_, index) => index + 1);
 
-export default function MovementPage() {
+export default async function MovementPage() {
+  const data = await getTronPaymentsData();
   return (
     <main className="movement-page">
-      <ConceptSwitcher active="movement" />
+      <ConceptSwitcher active="movement" data={data} />
       <SiteHeader active="movement" dark />
 
       <section className="movement-hero shell" id="why">
@@ -30,13 +32,13 @@ export default function MovementPage() {
       </section>
 
       <section className="route-feed shell" id="journeys">
-        <article><span>PAYROLL</span><h3>Singapore <i>→</i> Manila</h3><p><b>SETTLED</b> · 24 / 7</p></article>
-        <article><span>B2B</span><h3>Dubai <i>→</i> Lagos</h3><p><b>LOW FRICTION</b> · GLOBAL</p></article>
-        <article><span>P2P</span><h3>São Paulo <i>→</i> Lisbon</h3><p><b>DIRECT</b> · ALWAYS ON</p></article>
-        <div className="route-ticker"><b>LIVE ROUTES</b><span>WALLET</span><i>→</i><span>NETWORK</span><i>→</i><span>SETTLEMENT</span><i>→</i><span>RECIPIENT</span></div>
+        <article><span>PAYROLL · EXAMPLE</span><h3>Singapore <i>→</i> Manila</h3><p><b>PAYMENT JOURNEY</b> · 24 / 7</p></article>
+        <article><span>B2B · EXAMPLE</span><h3>Dubai <i>→</i> Lagos</h3><p><b>PAYMENT JOURNEY</b> · GLOBAL</p></article>
+        <article><span>P2P · EXAMPLE</span><h3>São Paulo <i>→</i> Lisbon</h3><p><b>PAYMENT JOURNEY</b> · ALWAYS ON</p></article>
+        <div className="route-ticker"><b>HOW VALUE MOVES</b><span>WALLET</span><i>→</i><span>NETWORK</span><i>→</i><span>SETTLEMENT</span><i>→</i><span>RECIPIENT</span></div>
       </section>
 
-      <section className="movement-proof shell"><ProofStrip dark /></section>
+      <section className="movement-proof shell"><ProofStrip dark data={data} /></section>
 
       <section className="journey-story shell" id="solutions">
         <div className="journey-sticky">
@@ -73,7 +75,7 @@ export default function MovementPage() {
       <section className="movement-build" id="build">
         <div className="shell"><span>BUILD THE NEXT ROUTE</span><h2>Bring your payment product to TRON.</h2><a href="#why">Explore developer resources ↗</a></div>
       </section>
-      <SiteFooter dark />
+      <SiteFooter dark data={data} />
     </main>
   );
 }

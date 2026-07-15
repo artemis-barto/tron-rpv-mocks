@@ -1,10 +1,18 @@
+import Link from "next/link";
+import {
+  barHeights,
+  formatMonth,
+  type TronPaymentsData,
+  type VolumePoint,
+} from "./data";
+
 type Concept = "home" | "proof" | "movement" | "future" | "live";
 
 export function Mark() {
   return <span className="mark" aria-hidden="true"><i /></span>;
 }
 
-export function ConceptSwitcher({ active }: { active: Concept }) {
+export function ConceptSwitcher({ active, data }: { active: Concept; data: TronPaymentsData }) {
   const links: { href: string; label: string; id: Concept }[] = [
     { href: "/", label: "All concepts", id: "home" },
     { href: "/proof", label: "01 Proof", id: "proof" },
@@ -17,12 +25,14 @@ export function ConceptSwitcher({ active }: { active: Concept }) {
       <span>CONCEPT PREVIEW</span>
       <nav>
         {links.map((link) => (
-          <a key={link.id} href={link.href} aria-current={active === link.id ? "page" : undefined}>
+          <Link key={link.id} href={link.href} aria-current={active === link.id ? "page" : undefined}>
             {link.label}
-          </a>
+          </Link>
         ))}
       </nav>
-      <em>Metrics are placeholders</em>
+      <em className={`data-status data-status-${data.status}`}>
+        {data.status === "live" ? `Verified data · ${formatMonth(data.asOf, true)}` : "Live data unavailable"}
+      </em>
     </aside>
   );
 }
@@ -36,10 +46,10 @@ export function SiteHeader({
 }) {
   return (
     <header className={`site-header shell ${dark ? "site-header-dark" : ""}`}>
-      <a className={`brand ${dark ? "brand-light" : "brand-dark"}`} href="/" aria-label="TRON Payments concepts home">
+      <Link className={`brand ${dark ? "brand-light" : "brand-dark"}`} href="/" aria-label="TRON Payments concepts home">
         <Mark />
         <span>TRON PAYMENTS</span>
-      </a>
+      </Link>
       <nav aria-label="Primary navigation">
         <a href="#why">Why TRON</a>
         <a href="#solutions">Solutions</a>
@@ -52,26 +62,29 @@ export function SiteHeader({
   );
 }
 
-export function MetricBars({ light = false }: { light?: boolean }) {
-  const heights = [22, 29, 25, 38, 44, 40, 58, 51, 69, 83, 76, 91];
+export function MetricBars({
+  light = false,
+  series,
+  label,
+}: {
+  light?: boolean;
+  series: VolumePoint[];
+  label: string;
+}) {
+  const window = series.slice(-12);
+  const heights = barHeights(window);
   return (
-    <div className={`metric-bars ${light ? "metric-bars-light" : ""}`} aria-label="Illustrative upward network activity trend">
-      {heights.map((height, index) => <i key={index} style={{ height: `${height}%` }} />)}
+    <div className={`metric-bars ${light ? "metric-bars-light" : ""}`} role="img" aria-label={label}>
+      {heights.map((height, index) => <i key={window[index].month} style={{ height: `${height}%` }} />)}
     </div>
   );
 }
 
-export function ProofStrip({ dark = false }: { dark?: boolean }) {
-  const metrics = [
-    ["24 / 7", "settlement"],
-    ["GLOBAL", "reach"],
-    ["LOW", "friction"],
-    ["OPEN", "network"],
-  ];
+export function ProofStrip({ dark = false, data }: { dark?: boolean; data: TronPaymentsData }) {
   return (
     <div className={`proof-strip ${dark ? "proof-strip-dark" : ""}`}>
-      {metrics.map(([value, label]) => (
-        <div key={value}><strong>{value}</strong><span>{label}</span></div>
+      {data.proofMetrics.map(({ value, label }) => (
+        <div key={label}><strong>{value}</strong><span>{label}</span></div>
       ))}
     </div>
   );
@@ -86,13 +99,17 @@ export function LogoCloud({ dark = false }: { dark?: boolean }) {
   );
 }
 
-export function SiteFooter({ dark = false }: { dark?: boolean }) {
+export function SiteFooter({ dark = false, data }: { dark?: boolean; data: TronPaymentsData }) {
   return (
     <footer className={`site-footer ${dark ? "site-footer-dark" : ""}`}>
       <div className="shell footer-inner">
         <div className="brand"><Mark /><span>TRON PAYMENTS</span></div>
-        <p>Concept exploration. Placeholder metrics pending data sign-off.</p>
-        <a href="/">Compare concepts</a>
+        <p>
+          {data.status === "live"
+            ? `Artemis Snowflake data · through ${formatMonth(data.asOf)}`
+            : "Network data is temporarily unavailable."}
+        </p>
+        <Link href="/">Compare concepts</Link>
       </div>
     </footer>
   );

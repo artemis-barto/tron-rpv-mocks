@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { ConceptSwitcher, Mark, SiteFooter } from "./shared";
+import { getTronPaymentsData } from "./data";
 
 export const metadata: Metadata = {
   title: "Choose a design direction",
@@ -50,15 +52,16 @@ const concepts = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const data = await getTronPaymentsData();
   return (
     <main className="chooser-page">
-      <ConceptSwitcher active="home" />
+      <ConceptSwitcher active="home" data={data} />
       <header className="chooser-header shell">
-        <a className="brand brand-dark" href="/" aria-label="TRON Payments design concepts home">
+        <Link className="brand brand-dark" href="/" aria-label="TRON Payments design concepts home">
           <Mark />
           <span>TRON PAYMENTS</span>
-        </a>
+        </Link>
         <span className="chooser-kicker">INTERACTIVE DESIGN REVIEW</span>
       </header>
 
@@ -69,7 +72,7 @@ export default function Home() {
         </div>
         <div className="chooser-lede">
           <p>
-            Open each concept as a real responsive homepage. The core content and placeholder metrics stay consistent so the layout, mood, and storytelling approach are easy to compare.
+            Open each concept as a real responsive homepage. The core content and verified TRON metrics stay consistent so the layout, mood, and storytelling approach are easy to compare.
           </p>
           <span>Recommended starting point: Proof of Scale + Future Protocol details.</span>
         </div>
@@ -108,7 +111,7 @@ export default function Home() {
         <div><b>02</b><p>Notice how the same proof is framed in each route.</p></div>
         <div><b>03</b><p>Choose the posture, then combine the strongest modules.</p></div>
       </section>
-      <SiteFooter dark />
+      <SiteFooter dark data={data} />
     </main>
   );
 }
