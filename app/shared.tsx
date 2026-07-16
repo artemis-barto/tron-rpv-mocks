@@ -156,7 +156,7 @@ export function CompleteDataPanel({
           <div className="segment-data-grid">
             {data.segmentMetrics.map((metric) => (
               <article className={`segment-card segment-${metric.segment.toLowerCase()} ${metric.available ? "segment-available" : "segment-unavailable"}`} key={metric.segment}>
-                <div><span>{metric.segment}</span><i>{metric.available ? "VERIFIED" : "NOT RETURNED"}</i></div>
+                <div><span>{metric.segment}</span><i>{metric.sourceLabel}</i></div>
                 <p>{metric.useCase}</p>
                 <strong>{formatUSD(metric.latest)}</strong>
                 <dl>

@@ -26,6 +26,7 @@ export type SegmentMetric = {
   segment: PaymentSegment;
   useCase: string;
   available: boolean;
+  sourceLabel: string;
   latest: number | null;
   total36m: number | null;
   yoy: number | null;
@@ -241,7 +242,7 @@ export async function getTronPaymentsData(): Promise<TronPaymentsData> {
     fetchFullPayments(),
     fetchSeries("/api/b2b"),
     // The legacy /api/c2b route is backed by the chain-level PaymentScan table.
-    // It is global tracked payment volume, not a verified C2B segment.
+    // By product decision, the design uses it as a clearly labeled C2B proxy.
     fetchSeries("/api/c2b"),
   ]);
 
@@ -254,7 +255,10 @@ export async function getTronPaymentsData(): Promise<TronPaymentsData> {
   const standaloneTracked = trackedResult.status === "fulfilled"
     ? trackedResult.value.filter((point) => point.month < currentMonth)
     : [];
-  const availableSegments = full?.availableSegments ?? (standaloneB2B.length > 0 ? ["B2B"] : []);
+  const fallbackSegments: PaymentSegment[] = [];
+  if (standaloneB2B.length > 0) fallbackSegments.push("B2B");
+  if (standaloneTracked.length > 0) fallbackSegments.push("C2B");
+  const availableSegments: PaymentSegment[] = full?.availableSegments ?? fallbackSegments;
   const coverage = PAYMENT_SEGMENTS.every((segment) => availableSegments.includes(segment))
     ? "full"
     : availableSegments.length > 0 || standaloneTracked.length > 0
@@ -297,11 +301,19 @@ export async function getTronPaymentsData(): Promise<TronPaymentsData> {
       ? segmentVolumeSeries(segmentSeries, segment)
       : segment === "B2B"
         ? b2bSeries
-        : [];
+        : segment === "C2B"
+          ? seriesThrough(standaloneTracked, asOf)
+          : [];
+    const sourceLabel = !available
+      ? "NOT RETURNED"
+      : segment === "C2B" && fullPoints.length === 0
+        ? "TRON CHAIN PROXY"
+        : "VERIFIED SEGMENT";
     return {
       segment,
       useCase: SEGMENT_USE_CASES[segment],
       available,
+      sourceLabel,
       latest: available ? valueAt(series, asOf) : null,
       total36m: available ? sumWindow(series, 36) : null,
       yoy: available ? rollingYearOverYear(series) : null,
@@ -311,7 +323,7 @@ export async function getTronPaymentsData(): Promise<TronPaymentsData> {
   return {
     status,
     coverage,
-    source: full?.source ?? "Artemis Snowflake B2B + PaymentScan TRON chain volume",
+    source: full?.source ?? "Artemis Snowflake B2B + PaymentScan TRON chain volume as C2B proxy",
     asOf,
     availableSegments,
     latestB2B,

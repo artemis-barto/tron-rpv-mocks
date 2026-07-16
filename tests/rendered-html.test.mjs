@@ -23,15 +23,15 @@ async function render(path = "/") {
   );
 }
 
-test("server-renders the chooser and all four design concepts with verified data labels", async () => {
+test("server-renders the chooser and all four concepts with honest data status", async () => {
   for (const path of ["/", "/proof", "/movement", "/future", "/live"]) {
     const response = await render(path);
     assert.equal(response.status, 200, `${path} should render successfully`);
     assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
     const html = await response.text();
-    assert.match(html, /Verified data/i);
-    assert.match(html, /Artemis Snowflake data/i);
+    assert.match(html, /Full data|Partial verified data|Live data unavailable/i);
+    assert.match(html, /Artemis Snowflake data|Network data is temporarily unavailable/i);
     assert.doesNotMatch(html, /\$XX|metrics are placeholders|placeholder metrics/i);
   }
 });
@@ -58,7 +58,10 @@ test("prefers the full segment endpoint and keeps fallback sources semantically 
   assert.match(source, /\/api\/payments/);
   assert.match(source, /fetchSeries\("\/api\/b2b"\)/);
   assert.match(source, /fetchSeries\("\/api\/c2b"\)/);
-  assert.match(source, /global tracked payment volume/);
+  assert.match(source, /clearly labeled C2B proxy/);
+  assert.match(source, /fallbackSegments\.push\("C2B"\)/);
+  assert.match(source, /seriesThrough\(standaloneTracked, asOf\)/);
+  assert.match(source, /TRON CHAIN PROXY/);
   assert.match(source, /Cards \+ commerce/);
   assert.doesNotMatch(source, /mock|synthetic/i);
 });
