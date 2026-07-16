@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ConceptSwitcher, Mark, ProofStrip, SiteFooter, SiteHeader } from "../shared";
+import { CompleteDataPanel, ConceptSwitcher, Mark, ProofStrip, SiteFooter, SiteHeader } from "../shared";
 import { formatMonth, formatUSD, getTronPaymentsData } from "../data";
 
 export const metadata: Metadata = {
@@ -55,6 +55,8 @@ export default async function FuturePage() {
           <div className="telemetry-wave" aria-hidden="true">{Array.from({ length: 28 }, (_, index) => <i key={index} />)}</div>
         </section>
       </div>
+
+      <CompleteDataPanel data={data} theme="future" />
 
       <section className="future-intro shell" id="solutions">
         <div><p className="section-index">01 / PROGRAMMABLE BY DEFAULT</p><h2>Money becomes a system primitive.</h2></div>

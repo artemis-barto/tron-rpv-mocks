@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ConceptSwitcher, LogoCloud, MetricBars, ProofStrip, SiteFooter, SiteHeader } from "../shared";
+import { CompleteDataPanel, ConceptSwitcher, LogoCloud, MetricBars, ProofStrip, SiteFooter, SiteHeader } from "../shared";
 import { formatMonth, formatPercent, formatUSD, getTronPaymentsData } from "../data";
 
 export const metadata: Metadata = {
@@ -33,6 +33,8 @@ export default async function ProofPage() {
       </section>
 
       <section className="shell"><ProofStrip data={data} /></section>
+
+      <CompleteDataPanel data={data} theme="proof" />
 
       <section className="proof-thesis shell" id="solutions">
         <div>

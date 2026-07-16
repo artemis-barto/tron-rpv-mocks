@@ -23,7 +23,7 @@ async function render(path = "/") {
   );
 }
 
-test("server-renders all four design concepts with verified data labels", async () => {
+test("server-renders the chooser and all four design concepts with verified data labels", async () => {
   for (const path of ["/", "/proof", "/movement", "/future", "/live"]) {
     const response = await render(path);
     assert.equal(response.status, 200, `${path} should render successfully`);
@@ -36,11 +36,29 @@ test("server-renders all four design concepts with verified data labels", async 
   }
 });
 
-test("keeps the two live sources semantically distinct", async () => {
+test("every design direction includes the complete original payment data model", async () => {
+  for (const path of ["/proof", "/movement", "/future", "/live"]) {
+    const response = await render(path);
+    const html = await response.text();
+
+    assert.match(html, /VERIFIED DATA \/ COMPLETE VIEW/i, `${path} should include the full data module`);
+    assert.match(html, /Global tracked volume/i);
+    assert.match(html, />B2B</i);
+    assert.match(html, />B2C</i);
+    assert.match(html, />C2C</i);
+    assert.match(html, />C2B</i);
+    assert.match(html, /Cards \+ commerce/i);
+    assert.match(html, /GLOBAL \/ WORLD VOLUME/i);
+    assert.match(html, /no country or continent dimension/i);
+  }
+});
+
+test("prefers the full segment endpoint and keeps fallback sources semantically distinct", async () => {
   const source = await readFile(new URL("../app/data.ts", import.meta.url), "utf8");
+  assert.match(source, /\/api\/payments/);
   assert.match(source, /fetchSeries\("\/api\/b2b"\)/);
   assert.match(source, /fetchSeries\("\/api\/c2b"\)/);
-  assert.match(source, /monthly B2B volume/);
-  assert.match(source, /tracked payments/);
+  assert.match(source, /global tracked payment volume/);
+  assert.match(source, /Cards \+ commerce/);
   assert.doesNotMatch(source, /mock|synthetic/i);
 });

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ConceptSwitcher, Mark, ProofStrip, SiteFooter, SiteHeader } from "../shared";
+import { CompleteDataPanel, ConceptSwitcher, Mark, ProofStrip, SiteFooter, SiteHeader } from "../shared";
 import { getTronPaymentsData } from "../data";
 
 export const metadata: Metadata = {
@@ -39,6 +39,8 @@ export default async function MovementPage() {
       </section>
 
       <section className="movement-proof shell"><ProofStrip dark data={data} /></section>
+
+      <CompleteDataPanel data={data} theme="movement" />
 
       <section className="journey-story shell" id="solutions">
         <div className="journey-sticky">

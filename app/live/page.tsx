@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ConceptSwitcher, Mark, SiteFooter, SiteHeader } from "../shared";
+import { CompleteDataPanel, ConceptSwitcher, Mark, SiteFooter, SiteHeader } from "../shared";
 import { barHeights, formatMonth, formatPercent, getTronPaymentsData } from "../data";
 
 export const metadata: Metadata = {
@@ -50,6 +50,8 @@ export default async function LivePage() {
           {data.proofMetrics.map(({ value, label }) => <div key={label}><strong>{value}</strong><span>{label}</span></div>)}
         </section>
       </div>
+
+      <CompleteDataPanel data={data} theme="live" />
 
       <section className="live-demo shell" id="solutions">
         <div className="live-section-copy">
