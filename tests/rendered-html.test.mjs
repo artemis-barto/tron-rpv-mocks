@@ -50,6 +50,9 @@ test("every design direction includes the complete original payment data model",
     assert.match(html, /Cards \+ commerce/i);
     assert.match(html, /GLOBAL \/ WORLD VOLUME/i);
     assert.match(html, /no country or continent dimension/i);
+    assert.match(html, /Show previous payment segment/i);
+    assert.match(html, /Show next payment segment/i);
+    assert.match(html, /Pause automatic chart rotation/i);
   }
 });
 
@@ -66,7 +69,7 @@ test("prefers the full segment endpoint and keeps fallback sources semantically 
   assert.doesNotMatch(source, /mock|synthetic/i);
 });
 
-test("proof chart supports autoplay, arrows, pause, and direct segment selection", async () => {
+test("shared chart supports autoplay, arrows, pause, and direct segment selection", async () => {
   const source = await readFile(new URL("../app/SegmentChartCarousel.tsx", import.meta.url), "utf8");
   assert.match(source, /AUTO_ADVANCE_MS = 4500/);
   assert.match(source, /Show previous payment segment/);

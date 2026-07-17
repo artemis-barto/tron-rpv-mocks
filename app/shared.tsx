@@ -5,7 +5,6 @@ import {
   formatMonth,
   formatPercent,
   formatUSD,
-  PAYMENT_SEGMENTS,
   type TronPaymentsData,
   type VolumePoint,
 } from "./data";
@@ -113,16 +112,6 @@ export function CompleteDataPanel({
     { label: "B2B share", value: formatPercent(data.b2bShare), detail: data.b2bShare === null ? "NEEDS FULL SEGMENT SET" : "OF TRACKED VOLUME" },
     { label: "Month over month", value: formatPercent(data.trackedPaymentsMoM), detail: "GLOBAL TRACKED VOLUME" },
   ];
-  const segmentWindow = data.segmentSeries.slice(-12);
-  const totalWindow = segmentWindow.map((point) => ({
-    month: point.month,
-    volume: data.availableSegments.reduce((sum, segment) => sum + point[segment], 0),
-  }));
-  const totalHeights = barHeights(totalWindow);
-  const trackedWindow = data.trackedPaymentsSeries.slice(-12);
-  const trackedHeights = barHeights(trackedWindow);
-  const chartWindow = segmentWindow.length > 0 ? segmentWindow : trackedWindow;
-  const chartHeights = segmentWindow.length > 0 ? totalHeights : trackedHeights;
   const carouselItems: SegmentChartItem[] = data.segmentMetrics.map((metric) => {
     const series = data.segmentSeries.length > 0
       ? data.segmentSeries.map((point) => ({ month: point.month, volume: point[metric.segment] }))
@@ -190,33 +179,7 @@ export function CompleteDataPanel({
         </div>
 
         <div className="volume-data-layout">
-          {theme === "proof" ? <SegmentChartCarousel items={carouselItems} /> : <div className="stacked-data-card">
-            <div className="data-card-top"><span>MONTHLY PAYMENT VOLUME</span><em>LATEST 12 COMPLETE MONTHS</em></div>
-            <div className="stacked-data-chart" role="img" aria-label="Monthly TRON payment volume by payment segment">
-              {chartHeights.map((height, index) => {
-                const point = chartWindow[index];
-                const total = segmentWindow.length > 0
-                  ? PAYMENT_SEGMENTS.reduce((sum, segment) => sum + (point as (typeof segmentWindow)[number])[segment], 0)
-                  : (point as VolumePoint).volume;
-                return (
-                  <div className="stacked-data-column" key={point.month}>
-                    <div className="stacked-data-bar" style={{ height: `${height}%` }}>
-                      {segmentWindow.length > 0
-                        ? PAYMENT_SEGMENTS.filter((segment) => data.availableSegments.includes(segment)).map((segment) => {
-                            const value = (point as (typeof segmentWindow)[number])[segment];
-                            return <i className={`bar-${segment.toLowerCase()}`} key={segment} style={{ height: `${total > 0 ? (value / total) * 100 : 0}%` }} />;
-                          })
-                        : <i className="bar-tracked" style={{ height: "100%" }} />}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="stacked-data-axis"><span>{formatMonth(chartWindow.at(0)?.month ?? null, true)}</span><span>{formatMonth(chartWindow.at(-1)?.month ?? null, true)}</span></div>
-            <div className="segment-legend">
-              {PAYMENT_SEGMENTS.map((segment) => <span className={data.availableSegments.includes(segment) ? "is-live" : "is-missing"} key={segment}><i className={`bar-${segment.toLowerCase()}`} />{segment}</span>)}
-            </div>
-          </div>}
+          <SegmentChartCarousel items={carouselItems} />
 
           <div className="world-data-card">
             <div className="data-card-top"><span>GLOBAL / WORLD VOLUME</span><em>{data.geographyStatus === "live" ? "VERIFIED" : "SOURCE GAP"}</em></div>
