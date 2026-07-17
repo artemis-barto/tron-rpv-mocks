@@ -65,3 +65,13 @@ test("prefers the full segment endpoint and keeps fallback sources semantically 
   assert.match(source, /Cards \+ commerce/);
   assert.doesNotMatch(source, /mock|synthetic/i);
 });
+
+test("proof chart supports autoplay, arrows, pause, and direct segment selection", async () => {
+  const source = await readFile(new URL("../app/SegmentChartCarousel.tsx", import.meta.url), "utf8");
+  assert.match(source, /AUTO_ADVANCE_MS = 4500/);
+  assert.match(source, /Show previous payment segment/);
+  assert.match(source, /Show next payment segment/);
+  assert.match(source, /Pause automatic chart rotation/);
+  assert.match(source, /Choose a payment segment/);
+  assert.match(source, /aria-live="polite"/);
+});

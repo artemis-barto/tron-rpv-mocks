@@ -198,6 +198,31 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .stacked-data-axis { display: flex; justify-content: space-between; margin-top: 8px; color: var(--data-muted); font-family: 'Courier New', monospace; font-size: 7px; }
 .segment-legend { display: flex; gap: 18px; margin-top: 28px; font-family: 'Courier New', monospace; font-size: 7px; font-weight: 700; }
 .segment-legend span { display: inline-flex; align-items: center; gap: 7px; }.segment-legend span > i { width: 8px; height: 8px; }.segment-legend .is-missing { color: var(--data-muted); opacity: .48; }.segment-legend .is-missing > i { background: transparent; border: 1px solid currentColor; }
+.segment-carousel-card { position: relative; overflow: hidden; }
+.carousel-heading { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.carousel-heading .data-card-top { flex: 1; }
+.carousel-controls { display: flex; gap: 5px; }
+.carousel-controls button { width: 34px; height: 34px; display: grid; place-items: center; padding: 0; color: var(--data-text); background: transparent; border: 1px solid var(--data-line); cursor: pointer; font-size: 15px; transition: color .2s ease, background .2s ease, border-color .2s ease; }
+.carousel-controls button:hover, .carousel-controls button:focus-visible { color: white; background: var(--red); border-color: var(--red); outline: 0; }
+.carousel-controls .carousel-play { font-size: 9px; }
+.carousel-meta { display: grid; grid-template-columns: auto 1fr auto auto; gap: 12px; align-items: center; margin-top: 34px; padding-bottom: 13px; border-bottom: 1px solid var(--data-line); font-family: 'Courier New', monospace; animation: carouselMetaIn .45s ease both; }
+.carousel-meta strong { color: var(--segment-active); font-size: 13px; }.carousel-meta span, .carousel-meta em { color: var(--data-muted); font-size: 7px; font-style: normal; letter-spacing: .06em; text-transform: uppercase; }.carousel-meta b { font-size: 11px; }.carousel-meta em { color: var(--segment-active); }
+.proof-carousel-stage { position: relative; height: 226px; overflow: hidden; border-bottom: 1px solid var(--data-line); background-image: linear-gradient(var(--data-line) 1px, transparent 1px); background-size: 100% 25%; }
+.proof-carousel-stage::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--segment-active) 44%, transparent), transparent); translate: -100% 0; animation: chartFlash .72s ease-out both; }
+.proof-carousel-bars { position: absolute; inset: 18px 0 0; display: flex; align-items: end; gap: 8px; }
+.proof-carousel-bars i { flex: 1; min-height: 5px; background: linear-gradient(var(--segment-active), color-mix(in srgb, var(--segment-active) 62%, #380006)); transform-origin: bottom; animation: chartBarRise .62s cubic-bezier(.2,.75,.2,1) both; }
+.proof-carousel-bars i:nth-child(2) { animation-delay: .025s; }.proof-carousel-bars i:nth-child(3) { animation-delay: .05s; }.proof-carousel-bars i:nth-child(4) { animation-delay: .075s; }.proof-carousel-bars i:nth-child(5) { animation-delay: .1s; }.proof-carousel-bars i:nth-child(6) { animation-delay: .125s; }.proof-carousel-bars i:nth-child(7) { animation-delay: .15s; }.proof-carousel-bars i:nth-child(8) { animation-delay: .175s; }.proof-carousel-bars i:nth-child(9) { animation-delay: .2s; }.proof-carousel-bars i:nth-child(10) { animation-delay: .225s; }.proof-carousel-bars i:nth-child(11) { animation-delay: .25s; }.proof-carousel-bars i:nth-child(12) { animation-delay: .275s; }
+.carousel-empty { height: 100%; display: grid; place-content: center; justify-items: center; gap: 9px; color: var(--data-muted); text-align: center; }
+.carousel-empty strong { color: var(--segment-active); font-size: 38px; letter-spacing: -.06em; }.carousel-empty span { max-width: 280px; font-size: 10px; line-height: 1.5; }
+.carousel-tabs { display: flex; gap: 9px; margin-top: 24px; }
+.carousel-tabs button { min-width: 64px; display: inline-flex; align-items: center; gap: 8px; padding: 8px 10px; color: var(--data-muted); background: transparent; border: 1px solid transparent; cursor: pointer; font-family: 'Courier New', monospace; font-size: 8px; font-weight: 700; }
+.carousel-tabs button:hover, .carousel-tabs button:focus-visible, .carousel-tabs button.is-active { color: var(--data-text); border-color: var(--data-line); outline: 0; }
+.carousel-tabs button.is-active { background: color-mix(in srgb, var(--segment-active) 7%, transparent); }
+.carousel-tabs i { width: 8px; height: 8px; }
+.carousel-segment-b2b { --segment-active: #ed0b18; }.carousel-segment-b2c { --segment-active: #ff5f55; }.carousel-segment-c2c { --segment-active: #ff9a9c; }.carousel-segment-c2b { --segment-active: #87363b; }
+@keyframes chartFlash { 0% { opacity: 0; translate: -100% 0; } 22% { opacity: .95; } 100% { opacity: 0; translate: 100% 0; } }
+@keyframes chartBarRise { from { opacity: .18; transform: scaleY(.14) translateY(18px); } to { opacity: 1; transform: scaleY(1) translateY(0); } }
+@keyframes carouselMetaIn { from { opacity: 0; translate: -12px 0; } to { opacity: 1; translate: 0 0; } }
 .world-data-card { display: flex; flex-direction: column; }
 .world-data-card > strong { margin: 50px 0 9px; font-size: 58px; letter-spacing: -.07em; }
 .world-data-card > p { max-width: 560px; margin: 0; color: var(--data-muted); font-size: 11px; line-height: 1.55; }
@@ -555,6 +580,14 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .data-block-heading h3 { font-size: 34px; }
   .stacked-data-card, .world-data-card { min-height: 410px; padding: 19px; }
   .stacked-data-chart { height: 220px; gap: 5px; }
+  .carousel-heading { align-items: flex-start; }
+  .carousel-heading .data-card-top { display: grid; gap: 5px; }
+  .carousel-meta { grid-template-columns: auto 1fr auto; }
+  .carousel-meta em { grid-column: 2 / -1; }
+  .proof-carousel-stage { height: 210px; }
+  .proof-carousel-bars { gap: 5px; }
+  .carousel-tabs { display: grid; grid-template-columns: 1fr 1fr; }
+  .carousel-tabs button { justify-content: center; }
   .data-card-top { gap: 14px; line-height: 1.4; }
   .world-data-card > strong { margin-top: 38px; font-size: 48px; }
   .continent-data-grid { margin-top: 34px; }

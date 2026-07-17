@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SegmentChartCarousel, type SegmentChartItem } from "./SegmentChartCarousel";
 import {
   barHeights,
   formatMonth,
@@ -122,6 +123,26 @@ export function CompleteDataPanel({
   const trackedHeights = barHeights(trackedWindow);
   const chartWindow = segmentWindow.length > 0 ? segmentWindow : trackedWindow;
   const chartHeights = segmentWindow.length > 0 ? totalHeights : trackedHeights;
+  const carouselItems: SegmentChartItem[] = data.segmentMetrics.map((metric) => {
+    const series = data.segmentSeries.length > 0
+      ? data.segmentSeries.map((point) => ({ month: point.month, volume: point[metric.segment] }))
+      : metric.segment === "B2B"
+        ? data.b2bSeries
+        : metric.segment === "C2B"
+          ? data.trackedPaymentsSeries
+          : [];
+    const window = series.slice(-12);
+    return {
+      id: metric.segment,
+      label: metric.useCase,
+      sourceLabel: metric.sourceLabel,
+      latestLabel: formatUSD(metric.latest),
+      startLabel: formatMonth(window.at(0)?.month ?? null, true),
+      endLabel: formatMonth(window.at(-1)?.month ?? null, true),
+      available: metric.available,
+      series: window,
+    };
+  });
 
   return (
     <section className={`complete-data complete-data-${theme}`} id="data">
@@ -169,7 +190,7 @@ export function CompleteDataPanel({
         </div>
 
         <div className="volume-data-layout">
-          <div className="stacked-data-card">
+          {theme === "proof" ? <SegmentChartCarousel items={carouselItems} /> : <div className="stacked-data-card">
             <div className="data-card-top"><span>MONTHLY PAYMENT VOLUME</span><em>LATEST 12 COMPLETE MONTHS</em></div>
             <div className="stacked-data-chart" role="img" aria-label="Monthly TRON payment volume by payment segment">
               {chartHeights.map((height, index) => {
@@ -195,7 +216,7 @@ export function CompleteDataPanel({
             <div className="segment-legend">
               {PAYMENT_SEGMENTS.map((segment) => <span className={data.availableSegments.includes(segment) ? "is-live" : "is-missing"} key={segment}><i className={`bar-${segment.toLowerCase()}`} />{segment}</span>)}
             </div>
-          </div>
+          </div>}
 
           <div className="world-data-card">
             <div className="data-card-top"><span>GLOBAL / WORLD VOLUME</span><em>{data.geographyStatus === "live" ? "VERIFIED" : "SOURCE GAP"}</em></div>
